@@ -14,7 +14,7 @@ var name = 'reittiopas';
 var base = '/' + name;
 
 var apiUrl = 'http://api.reittiopas.fi/hsl/prod/';
-var auth = { user: 'piparkaq', pass: 'Herrasmiehet09' };
+var auth = { user: '', pass: '' };
 
 router.route(base)
   .get(function (req, res) {
