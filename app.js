@@ -13,7 +13,7 @@ var _ = require('underscore');
 var router = express.Router();
 var app = express();
 
-var VERSION = '0.0.5';
+var VERSION = '0.0.6';
 
 // Eyecandy
 require('colors');
