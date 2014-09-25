@@ -26,12 +26,19 @@ router.route(base + '/:request/:code')
 
     var response = Q.defer();
     var params = {
-      user: process.env.REITTIOPAS_USER,
-      pass: process.env.REITTIOPAS_PASS,
+      user: req.query.user || process.env.REITTIOPAS_USER,
+      pass: req.query.pass || process.env.REITTIOPAS_PASS,
       request: req.params.request,
       code: req.params.code
     };
 
+    if (params.user == null || params.pass == null) {
+      res.status(403).json({
+        error: {
+          message: 'Invalid authentication'
+        }
+      })
+    }
 
     http.get(apiUrl + '?' + queryString.stringify(params), function (httpResponse) {
       var body = '';
@@ -55,7 +62,7 @@ router.route(base + '/:request/:code')
     });
 
     response.promise.then(function (data) {
-      res.json({ originalResponse: data });
+      res.json(data);
     }, function (error) {
       res.status(500).json({ error: error });
     });

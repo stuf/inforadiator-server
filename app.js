@@ -1,7 +1,10 @@
+'use strict';
+
 var express = require('express');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
 
+var fs = require('fs');
 var util = require('util');
 var http = require('http');
 var Q = require('q');
@@ -10,9 +13,9 @@ var _ = require('underscore');
 var router = express.Router();
 var app = express();
 
-var VERSION = '0.0.2';
+var VERSION = '0.0.5';
 
-// Candy
+// Eyecandy
 require('colors');
 
 util.log('Info Radiator RESTful API ' + VERSION.bold + '');
@@ -28,22 +31,17 @@ var port = process.env.PORT || 8080;
 util.log('Initialising modules:');
 
 var base = '/api';
-['reittiopas'].forEach(function (it, i, list) {
+var routes = './routes';
+
+fs.readdirSync(routes).forEach(function (it, i, list) {
   util.log(util.format('Including module %s (%d/%d)', it.bold, (i + 1), list.length));
-
-  try {
-    var mod = require('./routes/' + it);
-
-    app.use(base, mod.router);
-  }
-  catch (e) {
-    util.log(util.format('\tError in loading module %s\n\n\t%j', it.bold, e));
-  }
+  var mod = require(routes + '/' + it);
+  app.use(base, mod.router);
 });
 
 util.log('...Done.');
 
-util.log('Attaching routing to base URL ' + base.bold);
+util.log(util.format('Attaching routing to base URL %s', base.bold));
 app.use(base, router);
 
 // Finally
