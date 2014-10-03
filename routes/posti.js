@@ -51,12 +51,11 @@ var eventKeyMap = {
 
 router.route(base + '/:shipment_id')
   .get(function (req, res) {
-    util.log(util.format('Getting shipment with ID %s', (req.params.shipment_id).bold));
+    util.log(util.format('%s:\tGetting shipment with ID %s', base, (req.params.shipment_id).bold));
 
     var response = Q.defer();
-    var responseResult = response.promise;
 
-    // URL parameters for request
+   // URL parameters for request
     var params = {
       lang: 'fi',
       ShipmentId: req.params.shipment_id
