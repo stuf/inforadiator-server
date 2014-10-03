@@ -56,6 +56,7 @@ router.route(base + '/:shipment_id')
     var response = Q.defer();
     var responseResult = response.promise;
 
+    // URL parameters for request
     var params = {
       lang: 'fi',
       ShipmentId: req.params.shipment_id
