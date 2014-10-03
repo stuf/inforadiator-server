@@ -51,7 +51,7 @@ var eventKeyMap = {
 
 router.route(base + '/:shipment_id')
   .get(function (req, res) {
-    util.log('Getting shipment with ID %s', req.params.shipment_id.bold);
+    util.log(util.format('Getting shipment with ID %s', (req.params.shipment_id).bold));
 
     var response = Q.defer();
     var responseResult = response.promise;
@@ -66,6 +66,10 @@ router.route(base + '/:shipment_id')
 
       httpResponse.on('data', function (chunk) {
         body += chunk;
+      });
+
+      httpResponse.on('error', function () {
+        response.reject({ error: arguments });
       });
 
       httpResponse.on('end', function () {
@@ -136,10 +140,10 @@ router.route(base + '/:shipment_id')
                     second: timeObj[6]
                   };
 
-                  var _d = dateTimeObj;
-
-                  var d = new Date(_d.year, _d.month, _d.day, _d.hour, _d.minute, _d.second);
+                  var dObj = dateTimeObj;
+                  var d = new Date(dObj.year, dObj.month, dObj.day, dObj.hour, dObj.minute, dObj.second);
                   var mo = moment(d);
+
                   eventValue = mo.toISOString();
                 }
                 catch (e) {
@@ -167,11 +171,9 @@ router.route(base + '/:shipment_id')
     });
 
     response.promise.then(function (data) {
-      //console.log('done:',arguments);
-      console.log('done');
       res.json(data);
-    }, function () {
-      console.log('falert:',arguments);
+    }, function (e) {
+      res.status(500).json(e);
     })
   });
 
