@@ -189,9 +189,15 @@ router.route(base + '/:shipment_id')
           fields.push(event);
         });
 
-        _.extend(data, { details: details }, { fields: fields });
-
-        response.resolve(data);
+        response.resolve(
+          _.extend(
+            data,
+            {
+              details: details,
+              fields: fields,
+              requestTime: moment().toISOString()
+            })
+        );
       });
     });
 
