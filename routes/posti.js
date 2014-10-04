@@ -167,9 +167,7 @@ router.route(base + '/:shipment_id')
                     second: timeObj[6]
                   };
 
-                  var dObj = dateTimeObj;
-                  var d = new Date(dObj.year, dObj.month, dObj.day, dObj.hour, dObj.minute, dObj.second);
-                  var mo = moment(d);
+                  var mo = moment(dateTimeObj);
 
                   eventValue = mo.toISOString();
                 }
