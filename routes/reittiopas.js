@@ -1,11 +1,26 @@
+/**
+ * reittiopas.js
+ *
+ * @requires express
+ * @requires underscore
+ * @requires http
+ * @requires util
+ * @requires q
+ * @requires querystring
+ * @requires moment
+ *
+ * @author Stefan Rimaila <stefan@rimaila.fi>
+ */
+
 'use strict';
 
 var Q = require('q');
 var util = require('util');
 var http = require('http');
 var express = require('express');
-var router = express.Router();
+var moment = require('moment');
 var queryString = require('querystring');
+var router = express.Router();
 
 var name = 'reittiopas';
 var base = '/' + name;
@@ -22,7 +37,7 @@ router.route(base)
 
 router.route(base + '/:request/:code')
   .get(function (req, res) {
-    util.log(util.format('Getting %s for code %s', req.params.request.bold, req.params.code.bold));
+    util.log(util.format('%s:\tGetting %s for code %s', base, (req.params.request).bold, (req.params.code).bold));
 
     var response = Q.defer();
     var params = {
@@ -50,8 +65,12 @@ router.route(base + '/:request/:code')
       httpResponse.on('end', function () {
         var data;
 
+        data = {
+          requestTime: moment().toISOString()
+        };
+
         try {
-          data = JSON.parse(body);
+          data = _.extend(data, JSON.parse(body));
         }
         catch (ex) {
           response.reject(ex);
