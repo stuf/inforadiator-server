@@ -1,3 +1,23 @@
+/**
+ * posti.js
+ * Crawler using Cheerio to parse package tracking into a (somewhat) meaningful RESTful web API.
+ *
+ * @version 0.1.0
+ *
+ * @requires express
+ * @requires util
+ * @requires http
+ * @requires querystring
+ * @requires slugify
+ * @requires cheerio
+ * @requires moment
+ * @requires underscore
+ *
+ * @author Stefan Rimaila <stefan@rimaila.fi>
+ *
+ * @todo Overridable detail and event translation objects
+ */
+
 'use strict';
 
 var util = require('util');
@@ -24,6 +44,7 @@ var rootSel = '#cv-view-box';
 
 // Oh dear...
 var timeRe = /^(\d{1,2})\.(\d{1,2})\.(\d{2,4}) klo (\d{1,2})\:(\d{1,2})\:(\d{1,2})$/;
+var cleanUpRe = /\./g;
 
 var sel = {
   itemHeader: '.shipment-event-table-header'
@@ -76,9 +97,9 @@ router.route(base + '/:shipment_id')
         var data;
         data = {};
 
-        var root = $(rootSel, body);
-        var $shipmentDetails = $('#shipment-details-table', root);
-        var $shipmentEvents = $('#shipment-event-table', root);
+        var $root = $(rootSel, body);
+        var $shipmentDetails = $('#shipment-details-table', $root);
+        var $shipmentEvents = $('#shipment-event-table', $root);
 
         var details = {};
         var fields = [];
@@ -86,12 +107,14 @@ router.route(base + '/:shipment_id')
         // Shipment details and meta
         var $shipmentDetailRows = $('tr', $shipmentDetails);
         $shipmentDetailRows.each(function (i, el) {
-          var b = $(el).text().replace(/\n/g, '');
-          b = b.split(':');
+          var b = $(el).text()
+            // Remove newlines and split into (possible) key-value -lists
+            .replace(/\n/g, '')
+            .split(':');
 
           // Do we have k:v-pair?
           if (b.length > 1) {
-            var key = slugify(b[0].toLowerCase().replace(/\./g, ''));
+            var key = slugify(b[0].toLowerCase().replace(cleanUpRe, ''));
             var value = b[1];
 
             if (detailKeyMap[key] != null) {
