@@ -193,9 +193,9 @@ router.route(base + '/:shipment_id')
           _.extend(
             data,
             {
+              requestTime: moment().toISOString(),
               details: details,
-              fields: fields,
-              requestTime: moment().toISOString()
+              fields: fields
             })
         );
       });
