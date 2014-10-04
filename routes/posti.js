@@ -2,7 +2,7 @@
  * posti.js
  * Crawler using Cheerio to parse package tracking into a (somewhat) meaningful RESTful web API.
  *
- * @version 0.1.0
+ * @version 0.1.1
  *
  * @requires express
  * @requires util
@@ -12,6 +12,7 @@
  * @requires cheerio
  * @requires moment
  * @requires underscore
+ * @requires q
  *
  * @author Stefan Rimaila <stefan@rimaila.fi>
  *
@@ -23,14 +24,14 @@
 var util = require('util');
 var http = require('http');
 var express = require('express');
-var router = express.Router();
 var queryString = require('querystring');
 var slugify = require('slugify');
 var moment = require('moment');
 var $ = require('cheerio');
 var _ = require('underscore');
-
 var Q = require('q');
+
+var router = express.Router();
 
 var name = 'posti';
 var base = '/' + name;
