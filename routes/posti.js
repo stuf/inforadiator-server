@@ -111,19 +111,22 @@ router.route(base + '/:shipment_id')
           event.events = [];
 
           $eventRows.each(function (evIdx, evEl) {
-            var $label = $('.shipment-event-table-label', evEl).text();
-            var $value = $('.shipment-event-table-data', evEl);
+            var $labelEl = $('.shipment-event-table-label', evEl);
+            var $valueEl = $('.shipment-event-table-data', evEl);
+
+            var labelText = $labelEl.text();
+            var valueText = $valueEl.text();
 
             var eObj = {
               event: null,
               value: null
             };
 
-            var k = slugify($label.replace(/\n/g, '').replace(/(:|\.)/g, '').toLowerCase());
+            var _key = slugify(labelText.replace(/\n/g, '').replace(/(:|\.)/g, '').toLowerCase());
 
-            if ($label != '' && k != '') {
-              var eventName = eventKeyMap[k];;
-              var eventValue = $value.text();
+            if (labelText != '' && _key != '') {
+              var eventName = eventKeyMap[_key];
+              var eventValue = valueText;
 
               // Probably the preferred timestamp
               if (eventName === 'registered') {
